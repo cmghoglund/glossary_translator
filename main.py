@@ -12,14 +12,8 @@ def load_glossary(filename):
     return glossary
 
 def translate_words(glossary, text):
-    translated_text = []
     words = text.split()
-    for word in words:
-        translation = glossary.get(word)
-        if translation:
-            translated_text.append(translation)
-        else:
-            translated_text.append(word)
+    translated_text = [glossary.get(word, word) for word in words]
     return ' '.join(translated_text)
 
 def main():
