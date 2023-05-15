@@ -2,20 +2,42 @@
 
 import csv
 
-def translate_words(glossary_file, input_file, output_file):
+def load_glossary(filename):
     glossary = {}
-    with open(glossary_file, 'r') as f:
+    with open(filename, 'r') as f:
         reader = csv.reader(f)
         for row in reader:
-            glossary[row[0]] = row[1]
+            word, translation = row
+            glossary[word] = translation
+    return glossary
+
+def translate_words(glossary, text):
+    translated_text = []
+    words = text.split()
+    for word in words:
+        translation = glossary.get(word)
+        if translation:
+            translated_text.append(translation)
+        else:
+            translated_text.append(word)
+    return ' '.join(translated_text)
+
+def main():
+    glossary_file = input("Enter filename of bilingual glossary (in csv format): ")
+    input_file = input("Enter filename of text file to translate: ")
+    output_file = input("Enter filename of output translated text file: ")
+
+    glossary = load_glossary(glossary_file)
+
     with open(input_file, 'r') as f:
         text = f.read()
-    for word in glossary:
-        text = text.replace(word, glossary[word])
+
+    translated_text = translate_words(glossary, text)
+
     with open(output_file, 'w') as f:
-        f.write(text)
-        
-glossary_file = 'glossary.csv'
-input_file = 'input.txt'
-output_file = 'output.txt'
-translate_words(glossary_file, input_file, output_file)
+        f.write(translated_text)
+
+    print("\nTranslation complete!\n")
+
+if __name__ == "__main__":
+    main()
